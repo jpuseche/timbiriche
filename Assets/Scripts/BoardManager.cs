@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour
 {
@@ -14,7 +15,8 @@ public class BoardManager : MonoBehaviour
     public int[,] HorizontalLines;
     public PlayerWins PlayerOneWinsPrefab;
     public PlayerWins PlayerTwoWinsPrefab;
-   
+    public Text PlayerOneScore;
+    public Text PlayerTwoScore;
    
    private void Awake()
    {
@@ -64,7 +66,6 @@ public class BoardManager : MonoBehaviour
 
     public void SetLine(Line l, bool isPlayerOne)
     {
-        Debug.Log(l._position);
         if (l.isVertical)
         {
             if (isPlayerOne)
@@ -88,19 +89,33 @@ public class BoardManager : MonoBehaviour
             }
         }
 
+        int P1Score = 0;
+        int P2Score = 0;
         for (int i = 0; i < Width-1; i++)
         {
             for (int j = 0; j < Height-1; j++)
             {
                 if (HorizontalLines[j, i] == 1 & VerticalLines[j+1, i] == 1 & HorizontalLines[j, i+1] == 1 & VerticalLines[j, i] == 1)
                 {
-                    Instantiate(PlayerOneWinsPrefab);
-                    GameManager.Instance.EndGame();
+                    P1Score = P1Score + 1;
+                    PlayerOneScore.text = "P1: " + P1Score;
+
+                    if (P1Score == 2)
+                    {
+                        Instantiate(PlayerOneWinsPrefab);
+                        GameManager.Instance.EndGame();
+                    }
                 }
                 if (HorizontalLines[j, i] == 2 & VerticalLines[j+1, i] == 2 & HorizontalLines[j, i+1] == 2 & VerticalLines[j, i] == 2)
                 {
-                    Instantiate(PlayerTwoWinsPrefab);
-                    GameManager.Instance.EndGame();
+                    P2Score = P2Score + 1;
+                    PlayerTwoScore.text = "P2: " + P2Score;
+
+                    if (P2Score == 2)
+                    {
+                        Instantiate(PlayerTwoWinsPrefab);
+                        GameManager.Instance.EndGame();
+                    }
                 }
             }
         }
